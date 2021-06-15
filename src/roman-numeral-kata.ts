@@ -25,7 +25,7 @@ export const convertArabicToNumeral = (num: number): string => {
 };
 
 export const convertNumeralToArabic = (numeral: string): number => {
-    const numeralValueMap = new Map();
+    const numeralValueMap = new Map<string, number>();
     numeralValueMap.set("I", 1);
     numeralValueMap.set("V", 5);
     numeralValueMap.set("X", 10);
@@ -36,11 +36,17 @@ export const convertNumeralToArabic = (numeral: string): number => {
 
     let numeralsArray: string[] = Array.from(numeral);
     let num = 0;
-    let val = 0;
+    let numValue: number | undefined = 0;
 
     while (numeralsArray.length) {
-        val = numeralValueMap.get(numeralsArray.shift());
-        num += val * (val < numeralValueMap.get(numeralsArray[0]) ? -1 : 1);
+        let removedArrayElement = numeralsArray.shift();
+        if (removedArrayElement) {
+            numValue = numeralValueMap.get(removedArrayElement);
+            if (numValue) {
+                let numValueOfFirstElement = numeralValueMap.get(numeralsArray[0]);
+                num += numValue * (numValue < numValueOfFirstElement! ? -1 : 1);
+            }
+        }
     }
     return num;
 };
